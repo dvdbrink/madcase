@@ -16,7 +16,6 @@ define([
 
     const FPS = 60;
     const PLAYER_COLLISIONS = true;
-    const DEBUG = false;
     const MANIFEST = "assets/configs/manifest.json";
 
     var canvas, width, height;
@@ -83,7 +82,7 @@ define([
         world.addSystem(new MovementSystem());
         world.addSystem(new CollisionSystem(entityCreator, PLAYER_COLLISIONS));
         world.addSystem(new AnimationSystem());
-        world.addSystem(new RenderSystem(canvas, FPS, tick, DEBUG));
+        world.addSystem(new RenderSystem(canvas, FPS, tick));
     }
 
     function loadMap() {

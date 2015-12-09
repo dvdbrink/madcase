@@ -2,10 +2,7 @@ define(["app/ecs/system", "lib/easeljs"], function(System) {
     "use strict";
 
     var RenderSystem = System.extend({
-        temp: [],
-        init: function(canvas, fps, onTick, debug) {
-            this.debug = debug;
-
+        init: function(canvas, fps, onTick) {
             this.stage = new createjs.Stage(canvas);
 
             createjs.Ticker.timingMode = createjs.Ticker.RAF;
@@ -33,25 +30,7 @@ define(["app/ecs/system", "lib/easeljs"], function(System) {
             }
         },
         update: function(entityManager, dt) {
-            if (this.debug) {
-                for (var entity of entityManager.withComponents(["collision"])) {
-                    var c = entity.getComponent("collision");
-
-                    var rect = new createjs.Shape();
-                    rect.graphics.beginStroke("red").drawRect(c.x, c.y, c.width, c.height);
-
-                    this.temp.push(rect);
-                    this.stage.addChild(rect);
-                }
-            }
-
             this.stage.update();
-
-            if (this.debug) {
-                for (var i of this.temp) {
-                    this.stage.removeChild(i);
-                }
-            }
         }
     });
 
