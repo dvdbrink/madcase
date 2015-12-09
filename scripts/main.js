@@ -19,8 +19,5 @@ requirejs.config({
 requirejs(["app/game"], function(Game) {
     var canvas = document.getElementById("canvas");
     var game = new Game(canvas);
-
-    window.addEventListener("resize", game.resize, false);
-
     game.start();
 });

@@ -10,56 +10,49 @@ define([
     "app/systems/inputsystem",
     "app/systems/movementsystem",
     "app/systems/rendersystem"
-], function(AssetManager, World, Entity, EntityCreator, AnimationSystem, CollisionSystem, DeathSystem,
-            DeteriorateSystem, InputSystem, MovementSystem, RenderSystem) {
+], function(AssetManager, World, Entity, EntityCreator,
+            AnimationSystem, CollisionSystem, DeathSystem,
+            DeteriorateSystem, InputSystem, MovementSystem,
+            RenderSystem) {
     "use strict";
 
     const FPS = 60;
     const PLAYER_COLLISIONS = true;
     const MANIFEST = "assets/configs/manifest.json";
 
-    var canvas, width, height;
+    var canvas,
+        width,
+        height;
 
-    var assetManager;
-    var world;
-    var entityCreator;
+    var assetManager,
+        world,
+        entityCreator;
 
     function Game(canvasElement) {
         canvas = canvasElement;
         width = canvasElement.width;
         height = canvasElement.height;
-
-        this.resize();
     }
 
     Game.prototype.start = function() {
+        initCanvas();
+        initWorld();
+
         assetManager = new AssetManager(MANIFEST, function() {
-            loadWorld();
             loadMap();
-            loadPlayers();
+            loadEntities();
         });
     };
 
-    Game.prototype.resize = function() {
-        var gameWidth = window.innerWidth;
-        var gameHeight = window.innerHeight;
-        var scaleToFitX = gameWidth / width;
-        var scaleToFitY = gameHeight / height;
+    function initCanvas() {
+        // Keep aspect ratio and in-game resolution on browser resize
+        window.addEventListener("resize", resize, false);
 
-        var currentScreenRatio = gameWidth / gameHeight;
-        var optimalRatio = Math.min(scaleToFitX, scaleToFitY);
-
-        if (currentScreenRatio >= 1.77 && currentScreenRatio <= 1.79) {
-            canvas.style.width = gameWidth + "px";
-            canvas.style.height = gameHeight + "px";
-        }
-        else {
-            canvas.style.width = width * optimalRatio + "px";
-            canvas.style.height = height * optimalRatio + "px";
-        }
+        // Make sure the canvas is initially correct
+        resize();
     }
 
-    function loadWorld() {
+    function initWorld() {
         world = new World();
         entityCreator = new EntityCreator(world);
 
@@ -70,7 +63,7 @@ define([
         world.addSystem(new MovementSystem());
         world.addSystem(new CollisionSystem(entityCreator, PLAYER_COLLISIONS));
         world.addSystem(new AnimationSystem());
-        world.addSystem(new RenderSystem(canvas, FPS, tick));
+        world.addSystem(new RenderSystem(canvas, tick, FPS));
     }
 
     function loadMap() {
@@ -87,7 +80,7 @@ define([
         }
     }
 
-    function loadPlayers() {
+    function loadEntities() {
         var controls = assetManager.get("controls");
         loadPlayer("Player 1", "link", 0, 0, 0.0075, controls.keyBindings[0]);
         loadPlayer("Player 2", "alien", 100, 100, 0.0075, controls.keyBindings[1]);
@@ -100,6 +93,25 @@ define([
 
     function tick(event) {
         world.update(event.delta);
+    }
+
+    function resize() {
+        var gameWidth = window.innerWidth;
+        var gameHeight = window.innerHeight;
+        var scaleToFitX = gameWidth / width;
+        var scaleToFitY = gameHeight / height;
+
+        var currentScreenRatio = gameWidth / gameHeight;
+        var optimalRatio = Math.min(scaleToFitX, scaleToFitY);
+
+        if (currentScreenRatio >= 1.77 && currentScreenRatio <= 1.79) {
+            canvas.style.width = gameWidth + "px";
+            canvas.style.height = gameHeight + "px";
+        }
+        else {
+            canvas.style.width = width * optimalRatio + "px";
+            canvas.style.height = height * optimalRatio + "px";
+        }
     }
 
     return Game;
