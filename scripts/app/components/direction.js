@@ -8,7 +8,7 @@ define(["app/ecs/component"], function(Component) {
             this.y = y;
         },
         length: function() {
-            return Math.sqrt(this.x, this.y);
+            return Math.sqrt(this.x * this.x + this.y * this.y);
         },
         normalise: function() {
             var length = this.length();
