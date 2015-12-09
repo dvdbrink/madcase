@@ -1,4 +1,4 @@
-define(["app/ecs/system", "app/keyboard"], function(System, Keyboard) {
+define(["app/ecs/system", "app/keyboard", "app/math"], function(System, Keyboard, Math) {
     "use strict";
 
     var InputSystem = System.extend({
@@ -69,9 +69,9 @@ define(["app/ecs/system", "app/keyboard"], function(System, Keyboard) {
 
             if (velocity.x != 0 || velocity.y != 0) {
                 var direction = entity.getComponent("direction");
-                direction.x = velocity.x;
-                direction.y = velocity.y;
-                direction.normalise();
+                var normalised = Math.normalise(velocity.x, velocity.y);
+                direction.x = normalised.x;
+                direction.y = normalised.y;
             }
 
             if (pc.actions["shoot"].active) {
