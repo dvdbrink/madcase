@@ -29,7 +29,7 @@ define(["app/input/keycodes"], function(keyCodes) {
     };
 
     function _onKeyReleased(event) {
-        keys[event.keyCode] = false
+        keys[event.keyCode] = false;
     };
 
     return {
