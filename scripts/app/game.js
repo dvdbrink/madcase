@@ -1,5 +1,5 @@
 define([
-    "app/tiledloader",
+    "app/assetmanager",
     "app/ecs/world",
     "app/ecs/entity",
     "app/entitycreator",
@@ -10,7 +10,7 @@ define([
     "app/systems/inputsystem",
     "app/systems/movementsystem",
     "app/systems/rendersystem"
-], function(TiledLoader, World, Entity, EntityCreator, AnimationSystem, CollisionSystem, DeathSystem,
+], function(AssetManager, World, Entity, EntityCreator, AnimationSystem, CollisionSystem, DeathSystem,
             DeteriorateSystem, InputSystem, MovementSystem, RenderSystem) {
     "use strict";
 
@@ -20,9 +20,9 @@ define([
 
     var canvas, width, height;
 
+    var assetManager;
     var world;
     var entityCreator;
-    var loader;
 
     function Game(canvasElement) {
         canvas = canvasElement;
@@ -33,7 +33,11 @@ define([
     }
 
     Game.prototype.start = function() {
-        preload(load);
+        assetManager = new AssetManager(MANIFEST, function() {
+            loadWorld();
+            loadMap();
+            loadPlayers();
+        });
     };
 
     Game.prototype.resize = function() {
@@ -55,20 +59,6 @@ define([
         }
     }
 
-    function preload(onComplete) {
-        loader = new createjs.LoadQueue();
-        loader.installPlugin(createjs.Sound);
-        loader.installPlugin(TiledLoader);
-        loader.on("complete", onComplete);
-        loader.loadManifest({src: MANIFEST, type: "manifest"});
-    }
-
-    function load() {
-        loadWorld();
-        loadMap();
-        loadPlayers();
-    }
-
     function loadWorld() {
         world = new World();
         entityCreator = new EntityCreator(world);
@@ -84,7 +74,7 @@ define([
     }
 
     function loadMap() {
-        var map = loader.getResult("level");
+        var map = assetManager.get("level");
         for (var layer of map.layers) {
             for (var x = 0; x < layer.length; ++x) {
                 for (var y = 0; y < layer[x].length; ++y) {
@@ -98,14 +88,13 @@ define([
     }
 
     function loadPlayers() {
-        var controls = loader.getResult("controls");
-
+        var controls = assetManager.get("controls");
         loadPlayer("Player 1", "link", 0, 0, 0.0075, controls.keyBindings[0]);
         loadPlayer("Player 2", "alien", 100, 100, 0.0075, controls.keyBindings[1]);
     }
 
     function loadPlayer(name, assetId, posX, posY, speed, keyBindings) {
-        var spriteSheet = loader.getResult(assetId);
+        var spriteSheet = assetManager.get(assetId);
         entityCreator.createPlayer(name, posX, posY, speed, spriteSheet, keyBindings);
     }
 
