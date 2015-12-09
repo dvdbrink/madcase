@@ -1,0 +1,18 @@
+{
+    "keyBindings": [
+        {
+            "moveup": ["w"],
+            "moveleft": ["a"],
+            "movedown": ["s"],
+            "moveright": ["d"],
+            "shoot": ["space"]
+        },
+        {
+            "moveup": ["arrowup"],
+            "moveleft": ["arrowleft"],
+            "movedown": ["arrowdown"],
+            "moveright": ["arrowright"],
+            "shoot": ["enter"]
+        }
+    ]
+}

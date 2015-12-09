@@ -1,0 +1,20 @@
+{
+    "images": ["assets/art/alien.png"],
+    "frames": {
+        "width": 90,
+        "height": 90,
+        "regX": 29,
+        "regY": 16,
+        "count": 20
+    },
+    "animations": {
+        "left": [0, 4, "left", 0.2],
+        "right": {
+            "frames": [9, 8, 7, 6, 5],
+            "next": "right",
+            "speed": 0.2
+        },
+        "up": [10, 14, "up", 0.2],
+        "down": [15, 19, "down", 0.2]
+    }
+}
