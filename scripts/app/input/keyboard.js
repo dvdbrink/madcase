@@ -1,13 +1,11 @@
-define(function() {
+define(["app/input/keycodes"], function(keyCodes) {
     "use strict";
 
     const keys = new Array(255);
 
     var initialized = false;
 
-    function init(keyCodes) {
-        this.keyCodes = keyCodes;
-
+    function init() {
         if (!initialized) {
             document.onkeydown = _onKeyPressed;
             document.onkeyup = _onKeyReleased;
@@ -17,12 +15,12 @@ define(function() {
     }
 
     function isPressed(key) {
-        var keyCode = this.keyCodes[key];
+        var keyCode = keyCodes[key];
         return keys[keyCode] == true;
     };
 
     function isReleased(key) {
-        var keyCode = this.keyCodes[key];
+        var keyCode = keyCodes[key];
         return keys[keyCode] == false;
     };
 
@@ -31,7 +29,7 @@ define(function() {
     };
 
     function _onKeyReleased(event) {
-        keys[event.keyCode] = false;
+        keys[event.keyCode] = false
     };
 
     return {

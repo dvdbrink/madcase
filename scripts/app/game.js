@@ -70,15 +70,13 @@ define([
     }
 
     function loadWorld() {
-        var keyCodes = loader.getResult("keycodes");
-
         world = new World();
         entityCreator = new EntityCreator(world);
 
         // Order is important!
         world.addSystem(new DeteriorateSystem());
         world.addSystem(new DeathSystem(entityCreator));
-        world.addSystem(new InputSystem(keyCodes, entityCreator));
+        world.addSystem(new InputSystem(entityCreator));
         world.addSystem(new MovementSystem());
         world.addSystem(new CollisionSystem(entityCreator, PLAYER_COLLISIONS));
         world.addSystem(new AnimationSystem());

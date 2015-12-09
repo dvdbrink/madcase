@@ -1,9 +1,9 @@
-define(["app/ecs/system", "app/keyboard", "app/math"], function(System, Keyboard, Math) {
+define(["app/ecs/system", "app/input/keyboard", "app/math"], function(System, Keyboard, Math) {
     "use strict";
 
     var InputSystem = System.extend({
-        init: function(keyCodes, entityCreator) {
-            Keyboard.init(keyCodes);
+        init: function(entityCreator) {
+            Keyboard.init();
 
             this.entityCreator = entityCreator;
         },

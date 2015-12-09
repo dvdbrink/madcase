@@ -3,7 +3,6 @@
 	"manifest": [
         {"id": "controls", "src": "configs/controls.json"},
         {"id": "entities", "src": "configs/entities.json"},
-        {"id": "keycodes", "src": "configs/keycodes.json"},
         {"id": "levels", "src": "configs/levels.json"},
 
         {"id": "link", "src": "art/link.json", "type": "spritesheet"},
