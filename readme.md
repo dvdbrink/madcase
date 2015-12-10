@@ -1,16 +1,16 @@
 ## madcase
 
-### Controls
+### Play
 * Player 1: WASD + Space
 * Player 2: Arrow keys + Enter
 
-### Play
-[Click me](https://danielvandenbrink.com/madcase/)
+[Click me to play in your browser](https://danielvandenbrink.com/madcase/)
 
 ### Roadmap
 * Terrain collisions
-* UI/HUD
-* Win/lose
+* UI/HUD (loading, health, kill/deaths)
+* Win/lose mechanic
+* Pick-ups (shield, etc)
 
 ### Code organization
 | Path/File                    | Description                                                                 |
