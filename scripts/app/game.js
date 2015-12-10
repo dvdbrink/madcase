@@ -69,8 +69,8 @@ define([
 
     function loadEntities() {
         var controls = assetManager.get("controls");
-        loadPlayer("Player 1", "link", 0, 0, controls.keyBindings[0]);
-        loadPlayer("Player 2", "alien", 100, 100, controls.keyBindings[1]);
+        loadPlayer("Player 1", "link", 100, 500, controls.keyBindings[0]);
+        loadPlayer("Player 2", "alien", 900, 350, controls.keyBindings[1]);
     }
 
     function loadPlayer(name, assetId, posX, posY, keyBindings) {
