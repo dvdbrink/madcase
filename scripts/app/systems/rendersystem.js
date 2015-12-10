@@ -2,11 +2,11 @@ define(["app/ecs/system", "lib/easeljs"], function(System) {
     "use strict";
 
     var RenderSystem = System.extend({
-        init: function(canvas, fps, onTick) {
+        init: function(canvas, onTick, targetFps) {
             this.stage = new createjs.Stage(canvas);
 
             createjs.Ticker.timingMode = createjs.Ticker.RAF;
-            createjs.Ticker.setFPS(fps);
+            createjs.Ticker.framerate = targetFps;
             createjs.Ticker.addEventListener("tick", onTick);
         },
         onEntityAdded: function(entity) {

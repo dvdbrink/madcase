@@ -18,7 +18,8 @@ define([
 
     const MANIFEST = "assets/configs/manifest.json";
     const PLAYER_COLLISIONS_ENABLED = true;
-    const FPS = 60;
+    const TARGET_FPS = 60;
+    const CACHE_LEVEL = true;
 
     var canvas,
         width,
@@ -53,7 +54,7 @@ define([
         world.addSystem(new MovementSystem());
         world.addSystem(new CollisionSystem(PLAYER_COLLISIONS_ENABLED));
         world.addSystem(new AnimationSystem());
-        world.addSystem(new RenderSystem(canvas, FPS, tick));
+        world.addSystem(new RenderSystem(canvas, tick, TARGET_FPS));
 
         assetManager.load(function() {
             loadLevel();
@@ -63,7 +64,7 @@ define([
 
     function loadLevel() {
         var level = assetManager.get("level");
-        entityCreator.createLevel(level);
+        entityCreator.createLevel(level, CACHE_LEVEL);
     }
 
     function loadEntities() {

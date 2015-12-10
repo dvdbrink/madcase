@@ -44,7 +44,7 @@ define([
         this.world.addEntity(e);
     };
 
-    EntityCreator.prototype.createLevel = function(level) {
+    EntityCreator.prototype.createLevel = function(level, cache) {
         var container = new createjs.Container();
         for (var layer of level.layers) {
             for (var x = 0; x < layer.length; ++x) {
@@ -56,8 +56,11 @@ define([
                 }
             }
         }
-        var bounds = container.getBounds();
-        container.cache(container.x, container.y, bounds.width, bounds.height);
+
+        if (cache) {
+            var bounds = container.getBounds();
+            container.cache(container.x, container.y, bounds.width, bounds.height);
+        }
 
         var e = new Entity();
         e.addComponent(new Sprite(container));
