@@ -8,6 +8,9 @@
         {"id": "link", "src": "art/link.json", "type": "spritesheet"},
         {"id": "alien", "src": "art/alien.json", "type": "spritesheet"},
 
+        {"id": "shoot", "src": "sounds/shoot.wav"},
+        {"id": "hit", "src": "sounds/hit.wav"},
+
         {"id": "level", "src": "levels/arena/arena.json", "type": "tiled"}
     ]
 }

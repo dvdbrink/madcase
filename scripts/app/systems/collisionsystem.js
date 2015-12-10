@@ -2,8 +2,7 @@ define(["app/ecs/system"], function(System) {
     "use strict";
 
     var CollisionSystem = System.extend({
-        init: function(entityCreator, playerCollisions) {
-            this.entityCreator = entityCreator;
+        init: function(playerCollisions) {
             this.playerCollisions = playerCollisions;
         },
         update: function(entityManager, dt) {
@@ -12,7 +11,7 @@ define(["app/ecs/system"], function(System) {
                     if (this.collide(e1, e2)) {
                         var c1 = e1.getComponent("collision");
                         if (c1.onCollision) {
-                            c1.onCollision(this.entityCreator, e1, e2);
+                            c1.onCollision(e1, e2);
                         }
                     }
                 }

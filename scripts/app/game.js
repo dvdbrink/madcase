@@ -1,8 +1,9 @@
 define([
     "app/assetmanager",
+    "app/audiomanager",
+    "app/entitycreator",
     "app/ecs/world",
     "app/ecs/entity",
-    "app/entitycreator",
     "app/systems/animationsystem",
     "app/systems/collisionsystem",
     "app/systems/deathsystem",
@@ -10,61 +11,55 @@ define([
     "app/systems/inputsystem",
     "app/systems/movementsystem",
     "app/systems/rendersystem"
-], function(AssetManager, World, Entity, EntityCreator,
-            AnimationSystem, CollisionSystem, DeathSystem,
-            DeteriorateSystem, InputSystem, MovementSystem,
-            RenderSystem) {
+], function(AssetManager, AudioManager, EntityCreator, World, Entity,
+            AnimationSystem, CollisionSystem, DeathSystem, DeteriorateSystem,
+            InputSystem, MovementSystem, RenderSystem) {
     "use strict";
 
-    const FPS = 60;
-    const PLAYER_COLLISIONS = true;
     const MANIFEST = "assets/configs/manifest.json";
+    const PLAYER_COLLISIONS_ENABLED = true;
+    const FPS = 60;
 
     var canvas,
         width,
         height;
 
-    var assetManager,
-        world,
+    var world,
+        assetManager,
+        audioManager,
         entityCreator;
 
     function Game(canvasElement) {
         canvas = canvasElement;
         width = canvasElement.width;
         height = canvasElement.height;
-    }
 
-    Game.prototype.start = function() {
-        initCanvas();
-        initWorld();
-
-        assetManager = new AssetManager(MANIFEST, function() {
-            loadMap();
-            loadEntities();
-        });
-    };
-
-    function initCanvas() {
         // Keep aspect ratio and in-game resolution on browser resize
         window.addEventListener("resize", resize, false);
-
         // Make sure the canvas is initially correct
         resize();
     }
 
-    function initWorld() {
+    Game.prototype.start = function() {
         world = new World();
-        entityCreator = new EntityCreator(world);
+        assetManager = new AssetManager(MANIFEST);
+        audioManager = new AudioManager(assetManager);
+        entityCreator = new EntityCreator(world, audioManager);
 
         // Order is important!
         world.addSystem(new DeteriorateSystem());
         world.addSystem(new DeathSystem(entityCreator));
         world.addSystem(new InputSystem(entityCreator));
         world.addSystem(new MovementSystem());
-        world.addSystem(new CollisionSystem(entityCreator, PLAYER_COLLISIONS));
+        world.addSystem(new CollisionSystem(PLAYER_COLLISIONS_ENABLED));
         world.addSystem(new AnimationSystem());
-        world.addSystem(new RenderSystem(canvas, tick, FPS));
-    }
+        world.addSystem(new RenderSystem(canvas, FPS, tick));
+
+        assetManager.load(function() {
+            loadMap();
+            loadEntities();
+        });
+    };
 
     function loadMap() {
         var map = assetManager.get("level");
