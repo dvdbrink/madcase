@@ -10,6 +10,7 @@
 
         {"id": "shoot", "src": "sounds/shoot.wav"},
         {"id": "hit", "src": "sounds/hit.wav"},
+        {"id": "death", "src": "sounds/death.wav"},
 
         {"id": "level", "src": "levels/arena/arena.json", "type": "tiled"}
     ]

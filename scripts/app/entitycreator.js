@@ -1,6 +1,7 @@
 define([
     "app/ecs/entity",
     "app/components/collision",
+    "app/components/damage",
     "app/components/deteriorate",
     "app/components/direction",
     "app/components/health",
@@ -9,7 +10,8 @@ define([
     "app/components/shape",
     "app/components/sprite",
     "app/components/velocity"
-], function(Entity, Collision, Deteriorate, Direction, Health, PlayerController, Position, Shape, Sprite, Velocity) {
+], function(Entity, Collision, Damage, Deteriorate, Direction, Health,
+            PlayerController, Position, Shape, Sprite, Velocity) {
     "use strict";
 
     function EntityCreator(world, audioManager) {
@@ -19,31 +21,6 @@ define([
 
     EntityCreator.prototype.destroy = function(entity) {
         this.world.removeEntity(entity);
-    };
-
-    EntityCreator.prototype.createPlayer = function(name, posX, posY, spriteSheet, keyBindings) {
-        const acceleration = 0.0075;
-
-        var sprite = new createjs.Sprite(spriteSheet);
-        var bounds = sprite.getBounds();
-        var regX = spriteSheet._regX;
-        var regY = spriteSheet._regY;
-
-        var e = new Entity();
-        e.addComponent(new Position(posX, posY));
-        e.addComponent(new Velocity(0, 0, acceleration));
-        e.addComponent(new Sprite(sprite));
-        e.addComponent(new PlayerController(name, keyBindings));
-        e.addComponent(new Health(100));
-        e.addComponent(new Direction(1, 0));
-        e.addComponent(new Collision(
-            bounds.x + posX + regX,
-            bounds.y + posY + regY,
-            bounds.width - regX * 2,
-            bounds.height - regY * 2
-        ));
-
-        this.world.addEntity(e);
     };
 
     EntityCreator.prototype.createLevel = function(level, cache) {
@@ -66,6 +43,35 @@ define([
 
         var e = new Entity();
         e.addComponent(new Sprite(container));
+        this.world.addEntity(e);
+    };
+
+    EntityCreator.prototype.createPlayer = function(name, posX, posY, spriteSheet, keyBindings) {
+        var that = this;
+
+        const acceleration = 0.0075;
+
+        var sprite = new createjs.Sprite(spriteSheet);
+        var bounds = sprite.getBounds();
+        var regX = spriteSheet._regX;
+        var regY = spriteSheet._regY;
+
+        var e = new Entity();
+        e.addComponent(new Position(posX, posY));
+        e.addComponent(new Velocity(0, 0, acceleration));
+        e.addComponent(new Sprite(sprite));
+        e.addComponent(new PlayerController(name, keyBindings));
+        e.addComponent(new Health(100, function(entity) {
+            that.audioManager.play("death");
+            that.destroy(entity);
+        }));
+        e.addComponent(new Direction(-1, 0));
+        e.addComponent(new Collision(
+            bounds.x + posX + regX,
+            bounds.y + posY + regY,
+            bounds.width - regX * 2,
+            bounds.height - regY * 2
+        ));
         this.world.addEntity(e);
     };
 
@@ -93,12 +99,16 @@ define([
         e.addComponent(new Position(posX, posY));
         e.addComponent(new Velocity(velX, velY, 0));
         e.addComponent(new Shape(shape));
-        e.addComponent(new Health(20));
+        e.addComponent(new Damage(20));
+        e.addComponent(new Health(20, function(entity) {
+            that.destroy(entity);
+        }));
         e.addComponent(new Deteriorate(1));
         e.addComponent(new Collision(posX, posY, radius * 2, radius * 2, function(bullet, other) {
             if (other.hasComponent("health")) {
+                var damage = bullet.getComponent("damage");
                 var health = other.getComponent("health");
-                health.value -= 20;
+                health.value -= damage.value;
             }
 
             that.audioManager.play("hit");
