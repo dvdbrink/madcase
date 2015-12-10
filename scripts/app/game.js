@@ -21,6 +21,7 @@ define([
     const PLAYER_COLLISIONS_ENABLED = true;
     const TARGET_FPS = 60;
     const CACHE_LEVEL = true;
+    const VOLUME = 0.3;
 
     var canvas,
         overlayCanvas,
@@ -48,7 +49,7 @@ define([
     Game.prototype.start = function() {
         world = new World();
         assetManager = new AssetManager(MANIFEST);
-        audioManager = new AudioManager(assetManager);
+        audioManager = new AudioManager(assetManager, VOLUME);
         uiManager = new UIManager(overlayCanvas);
         entityCreator = new EntityCreator(world, audioManager, uiManager);
 
