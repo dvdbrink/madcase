@@ -21,7 +21,7 @@
 | scripts/app/input            | Keyboard input handling                                                     |
 | scripts/app/assetmanager.js  | Loading and retrieving assets                                               |
 | scripts/app/audiomanager.js  | Play sounds loaded by AssetManager                                          |
-| scripts/app/entitycreator.js | Factory class for creating entities                                         |
+| scripts/app/entitycreator.js | Factory for creating entities                                               |
 | scripts/app/game.js          | Initializes and manages the world                                           |
 | scripts/app/math.js          | Game related math utilities                                                 |
 | scripts/app/tiledloader.js   | Custom PreloadJS loader for [Tiled's](http://www.mapeditor.org/) map format |

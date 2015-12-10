@@ -21,7 +21,9 @@ define([
         this.world.removeEntity(entity);
     };
 
-    EntityCreator.prototype.createPlayer = function(name, posX, posY, speed, spriteSheet, keyBindings) {
+    EntityCreator.prototype.createPlayer = function(name, posX, posY, spriteSheet, keyBindings) {
+        const acceleration = 0.0075;
+
         var sprite = new createjs.Sprite(spriteSheet);
         var bounds = sprite.getBounds();
         var regX = spriteSheet._regX;
@@ -29,7 +31,7 @@ define([
 
         var e = new Entity();
         e.addComponent(new Position(posX, posY));
-        e.addComponent(new Velocity(0, 0, speed));
+        e.addComponent(new Velocity(0, 0, acceleration));
         e.addComponent(new Sprite(sprite));
         e.addComponent(new PlayerController(name, keyBindings));
         e.addComponent(new Health(100));
@@ -67,15 +69,29 @@ define([
         this.world.addEntity(e);
     };
 
-    EntityCreator.prototype.createBullet = function(posX, posY, velX, velY, speed, color, radius) {
+    EntityCreator.prototype.createBullet = function(origin, direction) {
         var that = this;
 
+        const color = "darkblue";
+        const radius = 5;
+        const margin = {
+            x: 30,
+            y: 50
+        };
+
+        var posX = origin.x + (direction.x * margin.x);
+        var posY = origin.y + (direction.y * margin.y);
+        var velX = direction.x;
+        var velY = direction.y;
+
         var shape = new createjs.Shape();
-        shape.graphics.beginFill(color).drawCircle(posX + radius, posY + radius, radius);
+        shape.graphics
+            .beginFill(color)
+            .drawCircle(posX + radius, posY + radius, radius);
 
         var e = new Entity();
         e.addComponent(new Position(posX, posY));
-        e.addComponent(new Velocity(velX, velY, speed));
+        e.addComponent(new Velocity(velX, velY, 0));
         e.addComponent(new Shape(shape));
         e.addComponent(new Health(20));
         e.addComponent(new Deteriorate(1));

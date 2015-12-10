@@ -69,13 +69,13 @@ define([
 
     function loadEntities() {
         var controls = assetManager.get("controls");
-        loadPlayer("Player 1", "link", 0, 0, 0.0075, controls.keyBindings[0]);
-        loadPlayer("Player 2", "alien", 100, 100, 0.0075, controls.keyBindings[1]);
+        loadPlayer("Player 1", "link", 0, 0, controls.keyBindings[0]);
+        loadPlayer("Player 2", "alien", 100, 100, controls.keyBindings[1]);
     }
 
-    function loadPlayer(name, assetId, posX, posY, speed, keyBindings) {
+    function loadPlayer(name, assetId, posX, posY, keyBindings) {
         var spriteSheet = assetManager.get(assetId);
-        entityCreator.createPlayer(name, posX, posY, speed, spriteSheet, keyBindings);
+        entityCreator.createPlayer(name, posX, posY, spriteSheet, keyBindings);
     }
 
     function tick(event) {

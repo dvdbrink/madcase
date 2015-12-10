@@ -8,7 +8,7 @@ define(["app/ecs/system", "app/input/keyboard", "app/math"], function(System, Ke
             this.entityCreator = entityCreator;
         },
         update: function(entityManager, dt) {
-            for (var entity of entityManager.withComponents(["playercontroller", "position", "velocity", "direction"])) {
+            for (var entity of entityManager.withComponents(["playercontroller", "collision", "position", "velocity", "direction"])) {
                 this.processInput(entity);
                 this.processActions(entity, dt);
             }
@@ -47,6 +47,7 @@ define(["app/ecs/system", "app/input/keyboard", "app/math"], function(System, Ke
         },
         processActions: function(entity, dt) {
             var pc = entity.getComponent("playercontroller");
+            var collision = entity.getComponent("collision");
             var position = entity.getComponent("position");
             var velocity = entity.getComponent("velocity");
             var direction = entity.getComponent("direction");
@@ -68,17 +69,17 @@ define(["app/ecs/system", "app/input/keyboard", "app/math"], function(System, Ke
             }
 
             if (velocity.x != 0 || velocity.y != 0) {
-                var direction = entity.getComponent("direction");
                 var normalised = Math.normalise(velocity.x, velocity.y);
                 direction.x = normalised.x;
                 direction.y = normalised.y;
             }
 
             if (pc.actions["shoot"].active) {
-                this.entityCreator.createBullet(
-                    position.x + direction.x * 100, position.y + direction.y * 100,
-                    direction.x, direction.y, 0,
-                    "black", 5);
+                var center = {
+                    x: position.x + (collision.width / 2),
+                    y: position.y + (collision.height / 2)
+                };
+                this.entityCreator.createBullet(center, direction);
             }
         }
     });
