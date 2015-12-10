@@ -8,7 +8,6 @@
 
 ### Roadmap
 * Terrain collisions
-* UI/HUD (loading, health, kill/deaths)
 * Win/lose mechanic
 * Pick-ups (shield, etc)
 
