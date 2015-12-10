@@ -56,26 +56,34 @@ define([
         world.addSystem(new AnimationSystem());
         world.addSystem(new RenderSystem(canvas, tick, TARGET_FPS));
 
-        assetManager.load(function() {
-            loadLevel();
-            loadEntities();
-        });
+        assetManager.load(loadEntities);
     };
-
-    function loadLevel() {
-        var level = assetManager.get("level");
-        entityCreator.createLevel(level, CACHE_LEVEL);
-    }
 
     function loadEntities() {
         var controls = assetManager.get("controls");
-        loadPlayer("Player 1", "link", 100, 500, controls.keyBindings[0]);
-        loadPlayer("Player 2", "alien", 900, 350, controls.keyBindings[1]);
+        var entities = assetManager.get("entities");
+
+        for (var entity of entities.entities) {
+            switch (entity.type) {
+                case "level":
+                    loadLevel(entity.assetId);
+                    break;
+                case "player":
+                    var keyBindings = controls.keyBindings[entity.keyBindings];
+                    loadPlayer(entity.assetId, entity.name, entity.position, keyBindings);
+                    break;
+            }
+        }
     }
 
-    function loadPlayer(name, assetId, posX, posY, keyBindings) {
+    function loadLevel(assetId) {
+        var level = assetManager.get(assetId);
+        entityCreator.createLevel(level, CACHE_LEVEL);
+    }
+
+    function loadPlayer(assetId, name, position, keyBindings) {
         var spriteSheet = assetManager.get(assetId);
-        entityCreator.createPlayer(name, posX, posY, spriteSheet, keyBindings);
+        entityCreator.createPlayer(spriteSheet, name, position, keyBindings);
     }
 
     function tick(event) {

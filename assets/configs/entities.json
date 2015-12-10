@@ -1,3 +1,8 @@
 {
+    "entities": [
+        {"type": "level", "assetId": "arena"},
 
+        {"type": "player", "assetId": "link", "name": "Player 1", "position": {"x": 100, "y": 500}, "keyBindings": 0},
+        {"type": "player", "assetId": "alien", "name": "Player 2", "position": {"x": 900, "y": 350}, "keyBindings": 1}
+    ]
 }

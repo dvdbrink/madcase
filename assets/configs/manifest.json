@@ -3,7 +3,6 @@
 	"manifest": [
         {"id": "controls", "src": "configs/controls.json"},
         {"id": "entities", "src": "configs/entities.json"},
-        {"id": "levels", "src": "configs/levels.json"},
 
         {"id": "link", "src": "art/link.json", "type": "spritesheet"},
         {"id": "alien", "src": "art/alien.json", "type": "spritesheet"},
@@ -12,6 +11,6 @@
         {"id": "hit", "src": "sounds/hit.wav"},
         {"id": "death", "src": "sounds/death.wav"},
 
-        {"id": "level", "src": "levels/arena/arena.json", "type": "tiled"}
+        {"id": "arena", "src": "levels/arena/arena.json", "type": "tiled"}
     ]
 }

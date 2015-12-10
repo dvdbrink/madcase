@@ -46,7 +46,7 @@ define([
         this.world.addEntity(e);
     };
 
-    EntityCreator.prototype.createPlayer = function(name, posX, posY, spriteSheet, keyBindings) {
+    EntityCreator.prototype.createPlayer = function(spriteSheet, name, position, keyBindings) {
         var that = this;
 
         const acceleration = 0.0075;
@@ -57,7 +57,7 @@ define([
         var regY = spriteSheet._regY;
 
         var e = new Entity();
-        e.addComponent(new Position(posX, posY));
+        e.addComponent(new Position(position.x, position.y));
         e.addComponent(new Velocity(0, 0, acceleration));
         e.addComponent(new Sprite(sprite));
         e.addComponent(new PlayerController(name, keyBindings));
@@ -67,8 +67,8 @@ define([
         }));
         e.addComponent(new Direction(-1, 0));
         e.addComponent(new Collision(
-            bounds.x + posX + regX,
-            bounds.y + posY + regY,
+            bounds.x + position.x + regX,
+            bounds.y + position.y + regY,
             bounds.width - regX * 2,
             bounds.height - regY * 2
         ));
