@@ -44,9 +44,22 @@ define([
         this.world.addEntity(e);
     };
 
-    EntityCreator.prototype.createTile = function(sprite) {
+    EntityCreator.prototype.createLevel = function(level) {
         var e = new Entity();
-        e.addComponent(new Sprite(sprite));
+
+        var container = new createjs.Container();
+        for (var layer of level.layers) {
+            for (var x = 0; x < layer.length; ++x) {
+                for (var y = 0; y < layer[x].length; ++y) {
+                    var tile = layer[x][y];
+                    if (tile) {
+                        container.addChild(tile);
+                    }
+                }
+            }
+        }
+        e.addComponent(new Sprite(container));
+
         this.world.addEntity(e);
     };
 

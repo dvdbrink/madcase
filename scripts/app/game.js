@@ -56,23 +56,14 @@ define([
         world.addSystem(new RenderSystem(canvas, FPS, tick));
 
         assetManager.load(function() {
-            loadMap();
+            loadLevel();
             loadEntities();
         });
     };
 
-    function loadMap() {
-        var map = assetManager.get("level");
-        for (var layer of map.layers) {
-            for (var x = 0; x < layer.length; ++x) {
-                for (var y = 0; y < layer[x].length; ++y) {
-                    var tile = layer[x][y];
-                    if (tile) {
-                        entityCreator.createTile(tile);
-                    }
-                }
-            }
-        }
+    function loadLevel() {
+        var level = assetManager.get("level");
+        entityCreator.createLevel(level);
     }
 
     function loadEntities() {
