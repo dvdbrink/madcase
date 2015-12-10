@@ -45,8 +45,6 @@ define([
     };
 
     EntityCreator.prototype.createLevel = function(level) {
-        var e = new Entity();
-
         var container = new createjs.Container();
         for (var layer of level.layers) {
             for (var x = 0; x < layer.length; ++x) {
@@ -58,8 +56,11 @@ define([
                 }
             }
         }
-        e.addComponent(new Sprite(container));
+        var bounds = container.getBounds();
+        container.cache(container.x, container.y, bounds.width, bounds.height);
 
+        var e = new Entity();
+        e.addComponent(new Sprite(container));
         this.world.addEntity(e);
     };
 
@@ -84,9 +85,9 @@ define([
             that.audioManager.play("hit");
             that.destroy(bullet);
         }));
+        this.world.addEntity(e);
 
         this.audioManager.play("shoot");
-        this.world.addEntity(e);
     };
 
     return EntityCreator;
