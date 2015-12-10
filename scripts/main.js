@@ -12,7 +12,7 @@ requirejs.config({
     paths: {
         "lib/easeljs": "lib/easeljs-0.8.2.min",
         "lib/preloadjs": "lib/preloadjs-0.6.1.min",
-        "lib/soundjs": "lib/soundjs-0.6.1.min"
+        "lib/soundjs": "lib/soundjs-0.6.2.min"
     }
 });
 
