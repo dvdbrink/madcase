@@ -9,7 +9,8 @@ define(["lib/preloadjs", "lib/soundjs", "app/tiledloader"], function(_, __, Tile
         loader.installPlugin(TiledLoader);
     }
 
-    AssetManager.prototype.load = function(onComplete) {
+    AssetManager.prototype.load = function(handleProgress, onComplete) {
+        loader.on("progress", handleProgress);
         loader.on("complete", onComplete);
         loader.loadManifest({src: this.manifest, type: "manifest"});
     };

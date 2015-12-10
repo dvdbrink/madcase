@@ -61,8 +61,16 @@ define([
         world.addSystem(new AnimationSystem());
         world.addSystem(new RenderSystem(canvas, tick, TARGET_FPS));
 
-        assetManager.load(loadEntities);
+        uiManager.createLoadingBar();
+        assetManager.load(updateLoadingBar, function() {
+            loadEntities();
+            uiManager.destroyLoadingBar();
+        });
     };
+
+    function updateLoadingBar(event) {
+        uiManager.updateLoadingBar(event.progress);
+    }
 
     function loadEntities() {
         var controls = assetManager.get("controls");
