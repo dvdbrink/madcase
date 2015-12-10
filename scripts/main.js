@@ -18,6 +18,7 @@ requirejs.config({
 
 requirejs(["app/game"], function(Game) {
     var canvas = document.getElementById("canvas");
-    var game = new Game(canvas);
+    var overlay = document.getElementById("overlay");
+    var game = new Game(canvas, overlay);
     game.start();
 });

@@ -9,8 +9,8 @@ define(["app/ecs/system"], function(System) {
             for (var entity of entityManager.withComponents(["health"])) {
                 var health = entity.getComponent("health");
 
-                if (health.value <= 0 && health.onDeath) {
-                    health.onDeath(entity);
+                if (health.onChange) {
+                    health.onChange(entity);
                 }
             }
         }

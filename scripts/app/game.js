@@ -2,6 +2,7 @@ define([
     "app/assetmanager",
     "app/audiomanager",
     "app/entitycreator",
+    "app/uimanager",
     "app/ecs/world",
     "app/ecs/entity",
     "app/systems/animationsystem",
@@ -11,7 +12,7 @@ define([
     "app/systems/inputsystem",
     "app/systems/movementsystem",
     "app/systems/rendersystem"
-], function(AssetManager, AudioManager, EntityCreator, World, Entity,
+], function(AssetManager, AudioManager, EntityCreator, UIManager, World, Entity,
             AnimationSystem, CollisionSystem, DeathSystem, DeteriorateSystem,
             InputSystem, MovementSystem, RenderSystem) {
     "use strict";
@@ -22,16 +23,19 @@ define([
     const CACHE_LEVEL = true;
 
     var canvas,
+        overlayCanvas,
         width,
         height;
 
     var world,
         assetManager,
         audioManager,
-        entityCreator;
+        entityCreator,
+        uiManager;
 
-    function Game(canvasElement) {
+    function Game(canvasElement, overlayCanvasElement) {
         canvas = canvasElement;
+        overlayCanvas = overlayCanvasElement;
         width = canvasElement.width;
         height = canvasElement.height;
 
@@ -45,7 +49,8 @@ define([
         world = new World();
         assetManager = new AssetManager(MANIFEST);
         audioManager = new AudioManager(assetManager);
-        entityCreator = new EntityCreator(world, audioManager);
+        uiManager = new UIManager(overlayCanvas);
+        entityCreator = new EntityCreator(world, audioManager, uiManager);
 
         // Order is important!
         world.addSystem(new DeteriorateSystem());
@@ -70,7 +75,7 @@ define([
                     break;
                 case "player":
                     var keyBindings = controls.keyBindings[entity.keyBindings];
-                    loadPlayer(entity.assetId, entity.name, entity.position, keyBindings);
+                    loadPlayer(entity.assetId, entity.name, entity.position, entity.healthBarPosition, keyBindings);
                     break;
             }
         }
@@ -81,13 +86,16 @@ define([
         entityCreator.createLevel(level, CACHE_LEVEL);
     }
 
-    function loadPlayer(assetId, name, position, keyBindings) {
+    function loadPlayer(assetId, name, position, healthBarPosition, keyBindings) {
         var spriteSheet = assetManager.get(assetId);
-        entityCreator.createPlayer(spriteSheet, name, position, keyBindings);
+        entityCreator.createPlayer(spriteSheet, name, position, healthBarPosition, keyBindings);
     }
 
     function tick(event) {
-        world.update(event.delta);
+        var dt = event.delta;
+
+        world.update(dt);
+        uiManager.update(dt);
     }
 
     function resize() {
@@ -107,6 +115,9 @@ define([
             canvas.style.width = width * optimalRatio + "px";
             canvas.style.height = height * optimalRatio + "px";
         }
+
+        overlayCanvas.style.width = canvas.style.width;
+        overlayCanvas.style.height = canvas.style.height;
     }
 
     return Game;

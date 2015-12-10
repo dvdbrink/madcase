@@ -3,9 +3,9 @@ define(["app/ecs/component"], function(Component) {
 
     var Health = Component.extend({
         name: "health",
-        init: function(value, onDeath) {
+        init: function(value, onChange) {
             this.value = value;
-            this.onDeath = onDeath;
+            this.onChange = onChange;
         }
     });
 

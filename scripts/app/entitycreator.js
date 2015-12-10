@@ -14,9 +14,10 @@ define([
             PlayerController, Position, Shape, Sprite, Velocity) {
     "use strict";
 
-    function EntityCreator(world, audioManager) {
+    function EntityCreator(world, audioManager, uiManager) {
         this.world = world;
         this.audioManager = audioManager;
+        this.uiManager = uiManager;
     }
 
     EntityCreator.prototype.destroy = function(entity) {
@@ -46,7 +47,7 @@ define([
         this.world.addEntity(e);
     };
 
-    EntityCreator.prototype.createPlayer = function(spriteSheet, name, position, keyBindings) {
+    EntityCreator.prototype.createPlayer = function(spriteSheet, name, position, healthBarPosition, keyBindings) {
         var that = this;
 
         const acceleration = 0.0075;
@@ -62,8 +63,13 @@ define([
         e.addComponent(new Sprite(sprite));
         e.addComponent(new PlayerController(name, keyBindings));
         e.addComponent(new Health(100, function(entity) {
-            that.audioManager.play("death");
-            that.destroy(entity);
+            var health = entity.getComponent("health");
+            if (health.value <= 0) {
+                that.audioManager.play("death");
+                that.destroy(entity);
+            }
+
+            that.uiManager.updateHealthBar(name, health.value);
         }));
         e.addComponent(new Direction(-1, 0));
         e.addComponent(new Collision(
@@ -73,6 +79,8 @@ define([
             bounds.height - regY * 2
         ));
         this.world.addEntity(e);
+
+        that.uiManager.createHealthBar(name, healthBarPosition.x, healthBarPosition.y);
     };
 
     EntityCreator.prototype.createBullet = function(origin, direction) {
@@ -101,7 +109,10 @@ define([
         e.addComponent(new Shape(shape));
         e.addComponent(new Damage(20));
         e.addComponent(new Health(20, function(entity) {
-            that.destroy(entity);
+            var health = entity.getComponent("health")
+            if (health.value <= 0) {
+                that.destroy(entity);
+            }
         }));
         e.addComponent(new Deteriorate(1));
         e.addComponent(new Collision(posX, posY, radius * 2, radius * 2, function(bullet, other) {
