@@ -9,6 +9,7 @@ else {
 
 requirejs.config({
     baseUrl: "scripts",
+    urlArgs: "version=0.1.1",
     paths: {
         "lib/easeljs": "lib/easeljs-0.8.2.min",
         "lib/preloadjs": "lib/preloadjs-0.6.1.min",
