@@ -26,12 +26,6 @@ define([
         width,
         height;
 
-    var world,
-        assetManager,
-        audioManager,
-        entityCreator,
-        uiManager;
-
     function Game(canvasElement, overlayCanvasElement) {
         canvas = canvasElement;
         overlayCanvas = overlayCanvasElement;
@@ -45,11 +39,11 @@ define([
     }
 
     Game.prototype.start = function() {
-        world = new World();
-        assetManager = new AssetManager(ASSET_MANIFEST);
-        audioManager = new AudioManager(assetManager, MASTER_VOLUME);
-        uiManager = new UIManager(overlayCanvas);
-        entityCreator = new EntityCreator(world, assetManager, audioManager, uiManager);
+        var world = new World();
+        var assetManager = new AssetManager(ASSET_MANIFEST);
+        var audioManager = new AudioManager(assetManager, MASTER_VOLUME);
+        var uiManager = new UIManager(overlayCanvas);
+        var entityCreator = new EntityCreator(world, assetManager, audioManager, uiManager);
 
         uiManager.createLoadingBar();
         assetManager.load(uiManager.updateLoadingBar, function() {
