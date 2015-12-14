@@ -78,7 +78,7 @@ define([
         e.addComponent(new Health(100, function(entity) {
             var health = entity.getComponent("health");
             if (health.value <= 0) {
-                that.audioManager.play("death");
+                that.audioManager.playEffect("death");
                 that.destroy(entity);
             }
 
@@ -135,12 +135,12 @@ define([
                 health.value -= damage.value;
             }
 
-            that.audioManager.play("hit");
+            that.audioManager.playEffect("hit");
             that.destroy(bullet);
         }));
         this.world.addEntity(e);
 
-        this.audioManager.play("shoot");
+        this.audioManager.playEffect("shoot");
     };
 
     EntityCreator.prototype.loadLevel = function(assetId) {

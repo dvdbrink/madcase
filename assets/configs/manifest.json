@@ -10,6 +10,8 @@
         {"id": "shoot", "src": "sounds/shoot.wav"},
         {"id": "hit", "src": "sounds/hit.wav"},
         {"id": "death", "src": "sounds/death.wav"},
+        {"id": "cold_winter", "src": "sounds/cold_winter.ogg"},
+        {"id": "mountain_ascent", "src": "sounds/mountain_ascent.ogg"},
 
         {"id": "arena", "src": "levels/arena/arena.json", "type": "tiled"}
     ]

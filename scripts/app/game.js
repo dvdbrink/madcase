@@ -41,7 +41,7 @@ define([
     Game.prototype.start = function() {
         var world = new World();
         var assetManager = new AssetManager(ASSET_MANIFEST);
-        var audioManager = new AudioManager(assetManager, MASTER_VOLUME);
+        var audioManager = new AudioManager(MASTER_VOLUME, assetManager);
         var uiManager = new UIManager(overlayCanvas);
         var entityCreator = new EntityCreator(world, assetManager, audioManager, uiManager);
 
@@ -57,6 +57,8 @@ define([
             world.addSystem(new RenderSystem(canvas, function(event) {
                 world.update(event.delta);
             }, TARGET_FPS));
+
+            audioManager.playList(["cold_winter", "mountain_ascent"], true, true);
 
             entityCreator.createFromManifest("entities");
             uiManager.destroyLoadingBar();
