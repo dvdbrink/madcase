@@ -14,17 +14,32 @@ define([
             PlayerController, Position, Shape, Sprite, Velocity) {
     "use strict";
 
-    function EntityCreator(world, audioManager, uiManager) {
+    function EntityCreator(world, assetManager, audioManager, uiManager) {
         this.world = world;
+        this.assetManager = assetManager;
         this.audioManager = audioManager;
         this.uiManager = uiManager;
     }
+
+    EntityCreator.prototype.createFromManifest = function(manifest) {
+        var entities = this.assetManager.get(manifest);
+        for (var entity of entities.entities) {
+            switch (entity.type) {
+                case "level":
+                    this.loadLevel(entity.assetId);
+                    break;
+                case "player":
+                    this.loadPlayer(entity.assetId, entity.name, entity.position, entity.healthBarPosition, entity.keyBindings);
+                    break;
+            }
+        }
+    };
 
     EntityCreator.prototype.destroy = function(entity) {
         this.world.removeEntity(entity);
     };
 
-    EntityCreator.prototype.createLevel = function(level, cache) {
+    EntityCreator.prototype.createLevel = function(level) {
         var container = new createjs.Container();
         for (var layer of level.layers) {
             for (var x = 0; x < layer.length; ++x) {
@@ -37,10 +52,8 @@ define([
             }
         }
 
-        if (cache) {
-            var bounds = container.getBounds();
-            container.cache(container.x, container.y, bounds.width, bounds.height);
-        }
+        var bounds = container.getBounds();
+        container.cache(container.x, container.y, bounds.width, bounds.height);
 
         var e = new Entity();
         e.addComponent(new Sprite(container));
@@ -128,6 +141,18 @@ define([
         this.world.addEntity(e);
 
         this.audioManager.play("shoot");
+    };
+
+    EntityCreator.prototype.loadLevel = function(assetId) {
+        var level = this.assetManager.get(assetId);
+        this.createLevel(level);
+    };
+
+    EntityCreator.prototype.loadPlayer = function(assetId, name, position, healthBarPosition, keyBindingId) {
+        var spriteSheet = this.assetManager.get(assetId);
+        var controls = this.assetManager.get("controls");
+        var keyBindings = controls.keyBindings[keyBindingId];
+        this.createPlayer(spriteSheet, name, position, healthBarPosition, keyBindings);
     };
 
     return EntityCreator;

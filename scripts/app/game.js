@@ -4,7 +4,6 @@ define([
     "app/entitycreator",
     "app/uimanager",
     "app/ecs/world",
-    "app/ecs/entity",
     "app/systems/animationsystem",
     "app/systems/collisionsystem",
     "app/systems/deathsystem",
@@ -12,16 +11,15 @@ define([
     "app/systems/inputsystem",
     "app/systems/movementsystem",
     "app/systems/rendersystem"
-], function(AssetManager, AudioManager, EntityCreator, UIManager, World, Entity,
+], function(AssetManager, AudioManager, EntityCreator, UIManager, World,
             AnimationSystem, CollisionSystem, DeathSystem, DeteriorateSystem,
             InputSystem, MovementSystem, RenderSystem) {
     "use strict";
 
-    const MANIFEST = "assets/configs/manifest.json";
-    const PLAYER_COLLISIONS_ENABLED = true;
+    const ASSET_MANIFEST = "assets/configs/manifest.json";
+    const PLAYER_COLLISIONS = false;
     const TARGET_FPS = 60;
-    const CACHE_LEVEL = true;
-    const VOLUME = 0.3;
+    const MASTER_VOLUME = 0.3;
 
     var canvas,
         overlayCanvas,
@@ -48,64 +46,28 @@ define([
 
     Game.prototype.start = function() {
         world = new World();
-        assetManager = new AssetManager(MANIFEST);
-        audioManager = new AudioManager(assetManager, VOLUME);
+        assetManager = new AssetManager(ASSET_MANIFEST);
+        audioManager = new AudioManager(assetManager, MASTER_VOLUME);
         uiManager = new UIManager(overlayCanvas);
-        entityCreator = new EntityCreator(world, audioManager, uiManager);
-
-        // Order is important!
-        world.addSystem(new DeteriorateSystem());
-        world.addSystem(new DeathSystem(entityCreator));
-        world.addSystem(new InputSystem(entityCreator));
-        world.addSystem(new MovementSystem());
-        world.addSystem(new CollisionSystem(PLAYER_COLLISIONS_ENABLED));
-        world.addSystem(new AnimationSystem());
-        world.addSystem(new RenderSystem(canvas, tick, TARGET_FPS));
+        entityCreator = new EntityCreator(world, assetManager, audioManager, uiManager);
 
         uiManager.createLoadingBar();
-        assetManager.load(updateLoadingBar, function() {
-            loadEntities();
+        assetManager.load(uiManager.updateLoadingBar, function() {
+            // Order is important!
+            world.addSystem(new DeteriorateSystem());
+            world.addSystem(new DeathSystem());
+            world.addSystem(new InputSystem(entityCreator));
+            world.addSystem(new MovementSystem());
+            world.addSystem(new CollisionSystem(PLAYER_COLLISIONS));
+            world.addSystem(new AnimationSystem());
+            world.addSystem(new RenderSystem(canvas, function(event) {
+                world.update(event.delta);
+            }, TARGET_FPS));
+
+            entityCreator.createFromManifest("entities");
             uiManager.destroyLoadingBar();
         });
     };
-
-    function updateLoadingBar(event) {
-        uiManager.updateLoadingBar(event.progress);
-    }
-
-    function loadEntities() {
-        var controls = assetManager.get("controls");
-        var entities = assetManager.get("entities");
-
-        for (var entity of entities.entities) {
-            switch (entity.type) {
-                case "level":
-                    loadLevel(entity.assetId);
-                    break;
-                case "player":
-                    var keyBindings = controls.keyBindings[entity.keyBindings];
-                    loadPlayer(entity.assetId, entity.name, entity.position, entity.healthBarPosition, keyBindings);
-                    break;
-            }
-        }
-    }
-
-    function loadLevel(assetId) {
-        var level = assetManager.get(assetId);
-        entityCreator.createLevel(level, CACHE_LEVEL);
-    }
-
-    function loadPlayer(assetId, name, position, healthBarPosition, keyBindings) {
-        var spriteSheet = assetManager.get(assetId);
-        entityCreator.createPlayer(spriteSheet, name, position, healthBarPosition, keyBindings);
-    }
-
-    function tick(event) {
-        var dt = event.delta;
-
-        world.update(dt);
-        uiManager.update(dt);
-    }
 
     function resize() {
         var gameWidth = window.innerWidth;

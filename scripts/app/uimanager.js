@@ -7,14 +7,14 @@ define(["lib/easeljs"], function() {
 
     function UIManager(canvas) {
         stage = new createjs.Stage(canvas);
-    }
 
-    UIManager.prototype.update = function(dt) {
-        if (dirty) {
-            stage.update();
-            dirty = false;
-        }
-    };
+        createjs.Ticker.addEventListener("tick", function () {
+            if (dirty) {
+                stage.update();
+                dirty = false;
+            }
+        });
+    }
 
     UIManager.prototype.createLoadingBar = function() {
         loadingBar = createProgressBar(canvas.width / 2 - 100, canvas.height / 2 - 15, 200, 30, 2, "black", "black", "white", 1);

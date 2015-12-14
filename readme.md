@@ -9,7 +9,7 @@
 ### Roadmap
 * Terrain collisions
 * Win/lose mechanic
-* Pick-ups (shield, etc)
+* Pick-ups (shield, bomb, etc)
 
 ### Code organization
 | Path/File                    | Description                                                                 |
@@ -24,6 +24,7 @@
 | scripts/app/game.js          | Initializes and manages the world                                           |
 | scripts/app/math.js          | Game related math utilities                                                 |
 | scripts/app/tiledloader.js   | Custom PreloadJS loader for [Tiled's](http://www.mapeditor.org/) map format |
+| scripts/app/uimanager.js     | Creation and rendering of UI element                                        |
 
 ### Libraries, assets and tools
 * [Bfxr - Sound Effect Tool](http://www.bfxr.net/)
